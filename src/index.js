@@ -10,7 +10,16 @@ const PORT = '3000';
 
 app.get('/talker', async (req, res) => {
   const result = await middlewares.getPersons();
-  return res.status(200).json(result);
+  return res.status(HTTP_OK_STATUS).json(result);
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talker = await middlewares.getPersonId(id);
+  if (talker) {
+    return res.status(200).json(talker);
+  } 
+  return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

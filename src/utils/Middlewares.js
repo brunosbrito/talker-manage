@@ -13,4 +13,10 @@ const getPersons = async () => {
   }
 };
 
-module.exports = { getPersons };
+const getPersonId = async (id) => {
+  const persons = await getPersons();
+  const person = persons.find((p) => p.id === +(id));
+  return person;
+};
+
+module.exports = { getPersons, getPersonId };
