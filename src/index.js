@@ -24,7 +24,7 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', middlewares.validateEmail, middlewares.validatePassword, (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   return res.status(HTTP_OK_STATUS).json({
     token: `${token}`,
