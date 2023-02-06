@@ -65,6 +65,12 @@ async (req, res) => {
   res.status(HTTP_OK_STATUS).json(personEdited, null, 2);
 });
 
+app.delete('/talker/:id', middlewares.validadeteAuthorization, async (req, res) => {
+  const { id } = req.params;
+  await middlewares.deletTalker(+id);
+  res.status(204).json();
+});
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
