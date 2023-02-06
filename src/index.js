@@ -31,6 +31,25 @@ app.post('/login', middlewares.validateEmail, middlewares.validatePassword, (req
   });
 });
 
+app.post('/talker',
+  middlewares.validadeteAuthorization,
+  middlewares.validateName,
+  middlewares.validateAge,
+  middlewares.validateTalk,
+  middlewares.validateWatchedAt,
+  middlewares.validateRate,
+async (req, res) => {
+  const persons = await middlewares.getPersons();
+  const id = persons.length + 1;
+  const newTalker = {
+    id,
+    ...req.body,
+    };
+  persons.push(newTalker);
+  await middlewares.insertPerson([...persons, req.body]);
+  res.status(201).json(newTalker);
+});
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
