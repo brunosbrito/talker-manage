@@ -47,6 +47,17 @@ const validatePassword = (req, res, next) => {
   next();
 };
 
+const editPerson = async (id, requestPerson) => {
+  const persons = await getPersons();
+  const personsFiltered = persons.filter((person) => person.id !== id);
+  const personEdited = {
+    id,
+    ...requestPerson,
+  };
+  const newPersons = [...personsFiltered, personEdited];
+  await fs.writeFile(talkersPath, JSON.stringify(newPersons));
+};
+
 const insertPerson = async (newTalker) => {
   fs.writeFile(talkersPath, JSON.stringify(newTalker));
 };
@@ -146,4 +157,5 @@ module.exports = {
   validateWatchedAt,
   insertPerson,
   validateRate,
+  editPerson,
 };

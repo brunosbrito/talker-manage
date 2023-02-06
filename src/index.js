@@ -50,6 +50,21 @@ async (req, res) => {
   res.status(201).json(newTalker);
 });
 
+app.put('/talker/:id',
+  middlewares.validadeteAuthorization,
+  middlewares.validateName,
+  middlewares.validateAge,
+  middlewares.validateTalk,
+  middlewares.validateWatchedAt,
+  middlewares.validateRate,
+async (req, res) => {
+  const { id } = req.params;
+  await middlewares.editPerson(+id, req.body);
+  const newPersons = await middlewares.getPersons();
+  const personEdited = newPersons.find((person) => person.id === +id);
+  res.status(HTTP_OK_STATUS).json(personEdited, null, 2);
+});
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
