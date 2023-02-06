@@ -1,5 +1,7 @@
 const express = require('express');
 
+const crypto = require('crypto');
+
 const app = express();
 app.use(express.json());
 
@@ -20,6 +22,13 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(200).json(talker);
   } 
   return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+});
+
+app.post('/login', (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  return res.status(HTTP_OK_STATUS).json({
+    token: `${token}`,
+  });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
