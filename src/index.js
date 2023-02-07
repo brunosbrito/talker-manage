@@ -57,7 +57,7 @@ async (req, res) => {
     ...req.body,
     };
   persons.push(newTalker);
-  await middlewares.insertPerson([...persons, req.body]);
+  await middlewares.insertPerson([...persons]);
   res.status(201).json(newTalker);
 });
 
