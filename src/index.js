@@ -10,6 +10,24 @@ const middlewares = require('./utils/Middlewares');
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
+app.post('/login', middlewares.validateEmail, middlewares.validatePassword, (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  return res.status(HTTP_OK_STATUS).json({
+    token: `${token}`,
+  });
+});
+
+app.get('/talker/search', middlewares.validadeteAuthorization, async (req, res) => {
+  const { q } = req.query;
+
+  const data = await middlewares.getPersons();
+  const results = q
+    ? data.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()))
+    : data;
+  
+  return res.status(HTTP_OK_STATUS).json(results);
+});
+
 app.get('/talker', async (req, res) => {
   const result = await middlewares.getPersons();
   return res.status(HTTP_OK_STATUS).json(result);
@@ -22,13 +40,6 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(200).json(talker);
   } 
   return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
-});
-
-app.post('/login', middlewares.validateEmail, middlewares.validatePassword, (req, res) => {
-  const token = crypto.randomBytes(8).toString('hex');
-  return res.status(HTTP_OK_STATUS).json({
-    token: `${token}`,
-  });
 });
 
 app.post('/talker',
@@ -62,7 +73,7 @@ async (req, res) => {
   await middlewares.editPerson(+id, req.body);
   const newPersons = await middlewares.getPersons();
   const personEdited = newPersons.find((person) => person.id === +id);
-  res.status(HTTP_OK_STATUS).json(personEdited, null, 2);
+  res.status(HTTP_OK_STATUS).json(personEdited);
 });
 
 app.delete('/talker/:id', middlewares.validadeteAuthorization, async (req, res) => {
